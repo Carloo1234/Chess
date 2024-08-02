@@ -78,8 +78,36 @@ def bishop_valid_moves(piecePos, whitePieces, blackPieces):
 
 
 def rook_valid_moves(piecePos, whitePieces, blackPieces):
-    return 0
-
+    validMoves = []
+    possibleMoves = []
+    # Up
+    for i in range(1, 9):
+        move = [piecePos[0], piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Down
+    for i in range(1, 9):
+        move = [piecePos[0], piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1]]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1]]
+        possibleMoves.append([piecePos[0] - i, piecePos[1]])
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    filteredOutsideBoardMoves = filterOutsideBoard(possibleMoves)
+    validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
+    return validMoves
 
 def queen_valid_moves(piecePos, whitePieces, blackPieces):
     return 0

@@ -143,7 +143,8 @@ def drawPieces():
     for move in validMoves:
         circlePos = (gridPositions.get(tuple(move)))
         # print(circlePos)
-        pygame.draw.circle(boardSurface, "black", (circlePos[0]+24, circlePos[1]+24), 5)
+        pygame.draw.circle(boardSurface, "light green", (circlePos[0] + 24, circlePos[1] + 24), 10)
+
 
 while run:
     pygame.display.update()
