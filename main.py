@@ -140,7 +140,10 @@ def drawPieces():
             boardSurface.blit(blackKing, (gridPositions.get(pos)))
         elif piece[0] == "Pawn":
             boardSurface.blit(blackPawn, (gridPositions.get(pos)))
-
+    for move in validMoves:
+        circlePos = (gridPositions.get(tuple(move)))
+        # print(circlePos)
+        pygame.draw.circle(boardSurface, "black", (circlePos[0]+24, circlePos[1]+24), 5)
 
 while run:
     pygame.display.update()
