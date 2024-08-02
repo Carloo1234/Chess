@@ -149,27 +149,44 @@ while run:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousePos = pygame.mouse.get_pos()
-            if 360 < mousePos[0] < 840 and mousePos[1] < 480:  # if clicked on board
-                xPos = ((mousePos[0] - 360) // 60) + 1
-                yPos = (mousePos[1] // 60) + 1
-                clickCoords = [xPos, yPos]
-                clickedPieceindex = chess_logic.findPieceIndex(whitePieces, clickCoords)
-                if clickedPieceindex == -1: #Clicked on square with no white pieces
-                    if selectionStatus[0]: #There is a selection
-                        selectedPieceIndex = chess_logic.findPieceIndex(whitePieces, selectionStatus[1])
-                        if clickCoords in validMoves:
-                            whitePieces[selectedPieceIndex][1] = clickCoords
-                            takePieceIndex = chess_logic.findPieceIndex(blackPieces, clickCoords)
-                            if takePieceIndex != -1: #black piece exists on square to move to.
-                                blackPieces.remove(blackPieces[takePieceIndex])
-                        selectionStatus[0] = False
-                        validMoves = []
 
-                else: #Clicked on square with white pieces
-                    selectionStatus[0] = True
-                    selectionStatus[1] = clickCoords
-                    validMoves = chess_logic.getValidMoves(clickedPieceindex, whitePieces, blackPieces)
+            # Check if the click is on the board
+            if not (360 < mousePos[0] < 840 and mousePos[1] < 480):
+                continue
 
+            # Calculate board coordinates from mouse position
+            xPos = ((mousePos[0] - 360) // 60) + 1
+            yPos = (mousePos[1] // 60) + 1
+            clickCoords = [xPos, yPos]
+
+            # Check if the clicked square contains a white piece
+            clickedPieceIndex = chess_logic.findPieceIndex(whitePieces, clickCoords)
+
+            if clickedPieceIndex != -1:
+                # Clicked on a square with a white piece
+                selectionStatus[0] = True
+                selectionStatus[1] = clickCoords
+                validMoves = chess_logic.getValidMoves(clickedPieceIndex, whitePieces, blackPieces)
+                continue
+
+            # Clicked on an empty square or a square with a black piece
+            if not selectionStatus[0]:
+                continue
+
+            # Handle movement to a valid square
+            selectedPieceIndex = chess_logic.findPieceIndex(whitePieces, selectionStatus[1])
+            if clickCoords in validMoves:
+                # Move the selected piece to the new position
+                whitePieces[selectedPieceIndex][1] = clickCoords
+
+                # Check if a black piece is on the target square and remove it if present
+                takePieceIndex = chess_logic.findPieceIndex(blackPieces, clickCoords)
+                if takePieceIndex != -1:
+                    blackPieces.remove(blackPieces[takePieceIndex])
+
+            # Reset selection after move
+            selectionStatus[0] = False
+            validMoves = []
 
     screen.blit(boardSurface, (600 - (BOARD_WIDTH / 2), 0))
     drawBoard()

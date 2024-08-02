@@ -5,7 +5,6 @@ def findPieceIndex(piece_list, coords):
         if piece_coords == coords:
             return index
     return -1
-
 def getValidMoves(pieceIndex, whitePieces, blackPieces):
     pieceName = whitePieces[pieceIndex][0]
     piecePos = whitePieces[pieceIndex][1]
