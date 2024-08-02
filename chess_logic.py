@@ -57,7 +57,6 @@ def pawn_valid_moves(piecePos, whitePieces, blackPieces):
 
 
 def knight_valid_moves(piecePos, whitePieces, blackPieces):
-    validMoves = []
     possibleMoves = [
         [piecePos[0] + 1, piecePos[1] - 2],
         [piecePos[0] + 2, piecePos[1] - 1],
@@ -74,11 +73,37 @@ def knight_valid_moves(piecePos, whitePieces, blackPieces):
 
 
 def bishop_valid_moves(piecePos, whitePieces, blackPieces):
-    return 0
+    possibleMoves = []
+    # Top right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Top left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Bottom right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Bottom left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    filteredOutsideBoardMoves = filterOutsideBoard(possibleMoves)
+    validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
+    return validMoves
 
 
 def rook_valid_moves(piecePos, whitePieces, blackPieces):
-    validMoves = []
     possibleMoves = []
     # Up
     for i in range(1, 9):
@@ -101,7 +126,6 @@ def rook_valid_moves(piecePos, whitePieces, blackPieces):
     # Left
     for i in range(1, 9):
         move = [piecePos[0] - i, piecePos[1]]
-        possibleMoves.append([piecePos[0] - i, piecePos[1]])
         possibleMoves.append(move)
         if findPieceIndex(blackPieces + whitePieces, move) != -1:
             break
@@ -110,8 +134,72 @@ def rook_valid_moves(piecePos, whitePieces, blackPieces):
     return validMoves
 
 def queen_valid_moves(piecePos, whitePieces, blackPieces):
-    return 0
+    possibleMoves = []
+    # Top right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Top left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Bottom right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Bottom left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Up
+    for i in range(1, 9):
+        move = [piecePos[0], piecePos[1] - i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Down
+    for i in range(1, 9):
+        move = [piecePos[0], piecePos[1] + i]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Right
+    for i in range(1, 9):
+        move = [piecePos[0] + i, piecePos[1]]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    # Left
+    for i in range(1, 9):
+        move = [piecePos[0] - i, piecePos[1]]
+        possibleMoves.append(move)
+        if findPieceIndex(blackPieces + whitePieces, move) != -1:
+            break
+    filteredOutsideBoardMoves = filterOutsideBoard(possibleMoves)
+    validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
+    print(validMoves)
+    return validMoves
 
 
 def king_valid_moves(piecePos, whitePieces, blackPieces):
-    return 0
+    possibleMoves = [
+        [piecePos[0] + 1, piecePos[1]],
+        [piecePos[0] - 1, piecePos[1]],
+        [piecePos[0], piecePos[1] + 1],
+        [piecePos[0], piecePos[1] - 1],
+        [piecePos[0] + 1, piecePos[1] + 1],
+        [piecePos[0] - 1, piecePos[1] - 1],
+        [piecePos[0] + 1, piecePos[1] - 1],
+        [piecePos[0] - 1, piecePos[1] + 1],
+    ]
+    filteredOutsideBoardMoves = filterOutsideBoard(possibleMoves)
+    validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
+    return validMoves

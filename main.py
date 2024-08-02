@@ -142,9 +142,7 @@ def drawPieces():
             boardSurface.blit(blackPawn, (gridPositions.get(pos)))
     for move in validMoves:
         circlePos = (gridPositions.get(tuple(move)))
-        # print(circlePos)
         pygame.draw.circle(boardSurface, "light green", (circlePos[0] + 24, circlePos[1] + 24), 10)
-
 
 while run:
     pygame.display.update()
