@@ -180,6 +180,13 @@ while run:
             if clickCoords in validMoves:
                 # Move the selected piece to the new position
                 whitePieces[selectedPieceIndex][1] = clickCoords
+                if whitePieces[selectedPieceIndex][0] == 'Rook':
+                    if whitePieces[selectedPieceIndex][1] == [1, 8]:
+                        chess_logic.leftRookMoved = True
+                    elif whitePieces[selectedPieceIndex][1] == [8, 8]:
+                        chess_logic.rightRookMoved = True
+                elif whitePieces[selectedPieceIndex][0] == 'King':
+                    chess_logic.kingMoved = True
 
                 # Check if a black piece is on the target square and remove it if present
                 takePieceIndex = chess_logic.findPieceIndex(blackPieces, clickCoords)
