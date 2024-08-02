@@ -6,9 +6,9 @@ def findPieceIndex(piece_list, coords):
             return index
     return -1
 
-def getValidMoves(index, whitePieces, blackPieces):
-    pieceName = whitePieces[index][0]
-    piecePos = whitePieces[index][1]
+def getValidMoves(pieceIndex, whitePieces, blackPieces):
+    pieceName = whitePieces[pieceIndex][0]
+    piecePos = whitePieces[pieceIndex][1]
     if pieceName == "Pawn":
         return pawn_valid_moves(piecePos, whitePieces, blackPieces)
     elif pieceName == "Rook":
@@ -28,7 +28,7 @@ def pawn_valid_moves(piecePos, whitePieces, blackPieces):
     validMoves = []
     if findPieceIndex(whitePieces + blackPieces, [piecePos[0], piecePos[1] - 1]) == -1:
         validMoves.append([piecePos[0], piecePos[1] - 1])
-        if findPieceIndex(whitePieces + blackPieces, [piecePos[0], piecePos[1] - 2]) == -1:
+        if findPieceIndex(whitePieces + blackPieces, [piecePos[0], piecePos[1] - 2]) == -1 and piecePos[1] == 7:
             validMoves.append([piecePos[0], piecePos[1] - 2])
     if findPieceIndex(blackPieces, [piecePos[0] - 1, piecePos[1] - 1]) != -1:
         validMoves.append([piecePos[0] - 1, piecePos[1] - 1])

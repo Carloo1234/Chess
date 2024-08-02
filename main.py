@@ -57,9 +57,9 @@ blackKing = pygame.image.load('assets/pieces/black_king.png')
 blackKing = pygame.transform.scale(blackKing, (45, 45))
 
 gridPositions = {}
-selection = [100, 100]
+selectionStatus = [False, [0, 0]]
 # White pieces starting positions
-whitePiecesPositions = [
+whitePieces = [
     ['Rook', [1, 8]],
     ['Knight', [2, 8]],
     ['Bishop', [3, 8]],
@@ -78,7 +78,7 @@ whitePiecesPositions = [
     ['Pawn', [8, 7]]
 ]
 
-blackPiecesPositions = [
+blackPieces = [
     ['Rook', [1, 1]],
     ['Knight', [2, 1]],
     ['Bishop', [3, 1]],
@@ -98,6 +98,8 @@ blackPiecesPositions = [
 ]
 
 validMoves = []
+
+
 def drawBoard():
     for column in range(8):
         for row in range(8):
@@ -108,8 +110,9 @@ def drawBoard():
                 pygame.draw.rect(boardSurface, "white", [60 * row, 60 * column, 60, 60])
                 gridPositions.update({(column + 1, row + 1): (6 + (column * 60), 6 + (row * 60))})
 
+
 def drawPieces():
-    for piece in whitePiecesPositions:
+    for piece in whitePieces:
         pos = (piece[1][0], piece[1][1])
         if piece[0] == "Rook":
             boardSurface.blit(whiteRook, (gridPositions.get(pos)))
@@ -123,7 +126,7 @@ def drawPieces():
             boardSurface.blit(whiteKing, (gridPositions.get(pos)))
         elif piece[0] == "Pawn":
             boardSurface.blit(whitePawn, (gridPositions.get(pos)))
-    for piece in blackPiecesPositions:
+    for piece in blackPieces:
         pos = (piece[1][0], piece[1][1])
         if piece[0] == "Rook":
             boardSurface.blit(blackRook, (gridPositions.get(pos)))
@@ -146,24 +149,27 @@ while run:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousePos = pygame.mouse.get_pos()
-            if 360 < mousePos[0] < 840 and mousePos[1] < 480:  #On board
+            if 360 < mousePos[0] < 840 and mousePos[1] < 480:  # if clicked on board
                 xPos = ((mousePos[0] - 360) // 60) + 1
                 yPos = (mousePos[1] // 60) + 1
-                if turn == "white":
-                    print(f"xPos = {xPos}, yPos = {yPos}")
-                    index = chess_logic.findPieceIndex(whitePiecesPositions, [xPos, yPos])
-                    print(f"Index: {index}")
-                    if index != -1:
-                        print(f"Index is not -1")
-                        selection = whitePiecesPositions[index]
-                        print("Selection set to piece clicked")
-                        validMoves = chess_logic.getValidMoves(index, whitePiecesPositions, blackPiecesPositions)
-                        print(f"Valid moves: {validMoves}")
-                    else:
-                        if selection[1] != [100, 100]:
-                            if [xPos, yPos] in validMoves:
-                                whitePiecesPositions[index][1] = [1, 6]
-                        selection[1] = [100, 100]
+                clickCoords = [xPos, yPos]
+                clickedPieceindex = chess_logic.findPieceIndex(whitePieces, clickCoords)
+                if clickedPieceindex == -1: #Clicked on square with no white pieces
+                    if selectionStatus[0]: #There is a selection
+                        selectedPieceIndex = chess_logic.findPieceIndex(whitePieces, selectionStatus[1])
+                        if clickCoords in validMoves:
+                            whitePieces[selectedPieceIndex][1] = clickCoords
+                            takePieceIndex = chess_logic.findPieceIndex(blackPieces, clickCoords)
+                            if takePieceIndex != -1: #black piece exists on square to move to.
+                                blackPieces.remove(blackPieces[takePieceIndex])
+                        selectionStatus[0] = False
+                        validMoves = []
+
+                else: #Clicked on square with white pieces
+                    selectionStatus[0] = True
+                    selectionStatus[1] = clickCoords
+                    validMoves = chess_logic.getValidMoves(clickedPieceindex, whitePieces, blackPieces)
+
 
     screen.blit(boardSurface, (600 - (BOARD_WIDTH / 2), 0))
     drawBoard()
