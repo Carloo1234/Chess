@@ -178,15 +178,23 @@ while run:
             # Handle movement to a valid square
             selectedPieceIndex = chess_logic.findPieceIndex(whitePieces, selectionStatus[1])
             if clickCoords in validMoves:
+                # Check if you can castle(Rooks)
+                if whitePieces[selectedPieceIndex][0] == 'Rook':
+                    # Check left castle
+                    if whitePieces[selectedPieceIndex][1] == [1, 8]:
+                        chess_logic.canCastleLeft = False
+                        print("Cannot castle left")
+                    # Check right castle
+                    elif whitePieces[selectedPieceIndex][1] == [8, 8]:
+                        chess_logic.canCastleRight = False
+                        print("Cannot castle right")
+                # Check if you can castle(King)
+                elif whitePieces[selectedPieceIndex][0] == "King":
+                    chess_logic.canCastleRight = False
+                    chess_logic.canCastleLeft = False
+
                 # Move the selected piece to the new position
                 whitePieces[selectedPieceIndex][1] = clickCoords
-                if whitePieces[selectedPieceIndex][0] == 'Rook':
-                    if whitePieces[selectedPieceIndex][1] == [1, 8]:
-                        chess_logic.leftRookMoved = True
-                    elif whitePieces[selectedPieceIndex][1] == [8, 8]:
-                        chess_logic.rightRookMoved = True
-                elif whitePieces[selectedPieceIndex][0] == 'King':
-                    chess_logic.kingMoved = True
 
                 # Check if a black piece is on the target square and remove it if present
                 takePieceIndex = chess_logic.findPieceIndex(blackPieces, clickCoords)

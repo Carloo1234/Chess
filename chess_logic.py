@@ -1,7 +1,6 @@
+canCastleLeft = True
+canCastleRight = True
 
-kingMoved = False
-rightRookMoved = False
-leftRookMoved = False
 
 def findPieceIndex(piece_list, coords):
     """Finds the index of a piece at given coordinates."""
@@ -138,6 +137,7 @@ def rook_valid_moves(piecePos, whitePieces, blackPieces):
     validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
     return validMoves
 
+
 def queen_valid_moves(piecePos, whitePieces, blackPieces):
     possibleMoves = []
     # Top right
@@ -205,19 +205,31 @@ def king_valid_moves(piecePos, whitePieces, blackPieces):
         [piecePos[0] + 1, piecePos[1] - 1],
         [piecePos[0] - 1, piecePos[1] + 1],
     ]
-    if canCastleLeft(whitePieces + blackPieces, piecePos):
+    if checkIfCanCastleLeft(whitePieces + blackPieces, piecePos):
         possibleMoves.append([piecePos[0] - 2, piecePos[1]])
+    if checkIfCanCastleRight(whitePieces + blackPieces, piecePos):
+        possibleMoves.append([piecePos[0] + 2, piecePos[1]])
     filteredOutsideBoardMoves = filterOutsideBoard(possibleMoves)
     validMoves = filterOwnPieces(filteredOutsideBoardMoves, whitePieces)
     return validMoves
 
-def canCastleLeft(allPieces, piecePos):
-    if not kingMoved:
-        if not leftRookMoved:
-            for i in range(1, 4):
-                pieceExists = findPieceIndex(allPieces, piecePos[0] - i)
-                if pieceExists != -1:
-                    return False
-            return True
-        return False
-    return False
+
+def checkIfCanCastleLeft(allPieces, piecePos):
+    if canCastleLeft:
+        positionsToCheck = [[2, 8], [3, 8], [4, 8]]
+        # check no pieces are between king and rook
+        for position in positionsToCheck:
+            if findPieceIndex(allPieces, position) != -1:
+                return False
+        return True
+
+
+def checkIfCanCastleRight(allPieces, piecePos):
+    if canCastleRight:
+        print("test 1 passed")
+        positionsToCheck = [[6, 8], [7, 8]]
+        # check no pieces are between king and rook
+        for position in positionsToCheck:
+            if findPieceIndex(allPieces, position) != -1:
+                return False
+        return True
